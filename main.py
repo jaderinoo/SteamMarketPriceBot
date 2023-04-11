@@ -21,7 +21,7 @@ async def on_ready():
     )
 
     channel = client.get_channel(keys.CHANNEL)
-    parsedMessage = ''
+    embed = discord.Embed(title="Tyloo Price Bot", description="", color=0xf8d91c)
     for item in itemlist.itemList:
         response = requests.get(f'https://steamcommunity.com/market/priceoverview/?appid={item["AppID"]}&currency=1&market_hash_name={item["HashedName"]}')
         jsonresponse = response.json()
@@ -34,11 +34,11 @@ async def on_ready():
 
         if 'volume' in jsonresponse:
             vol = jsonresponse["volume"]
-        
-        parsedMessage += f'{item["Name"]} \t|\t Median Price - {medianPrice} \t|\t 24hr Vol - {vol} \n'
-        
+
+        embed.add_field(name=item["Name"], value=f'Median Price - {medianPrice} \t|\t 24hr Vol - {vol} \n', inline=False)        
+
     # Send message
-    await channel.send(parsedMessage)
+    await channel.send(embed=embed)
 
     await client.close()
 
